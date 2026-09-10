@@ -1,0 +1,18 @@
+# Base de datos local (¡Muy importante no subirla!)
+database/*.db
+database/*.sqlite3
+
+# Entornos virtuales de Python
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Node / Frontend (para la Fase 4)
+node_modules/
+.env
+
+# Archivos del sistema operativo (Mac/Windows)
+.DS_Store
+Thumbs.db
