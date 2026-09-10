@@ -1,0 +1,39 @@
+PECHO
+* Presa banca: 80kg
+* Press inclinado: 32.5kg
+* Aperturas: 80kg
+* Press sentado: 50kg
+* Press inferior: 40kg
+
+HOMBRO
+* Press militar: 22.5kg
+* Elevaciones laterales: 7.5kg 
+* Elevaciones maquina: 56
+
+TRICEPS
+* Katana: 8.75kg + extra
+* Con barra: 31kg
+
+ESPALDA
+* Jalón: 87kg 
+* Jalón unilateral: 40kg
+* Remo blanco: 47.5kg
+* Jalon sentado: 50kg
+* Remo polea barra: 64kg
+* Facepull: 31kg
+* Deltoides posterior: 55kg
+* Pullover máquina: 64kg
+
+BICEPS
+* Curl biceps: 40kg 
+* Curl polea: 28.75kg
+* Bayesian: 15kg
+* Martillo: 20kg
+
+PIERNAS
+* Abducción: 52.5kg
+* Sentadilla: 100kg
+* Peso muerto: 30kg
+* Prensa: 117.5kg
+* Cuádriceps: 125kg
+* Femoral sentado: 80kg
