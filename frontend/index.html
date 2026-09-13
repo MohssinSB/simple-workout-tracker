@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Workout Tracker</title>
+    <meta name="theme-color" content="#1A1A1A">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <button id="menu-btn" class="icon-btn" aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
+        <button id="profile-btn" class="icon-btn" aria-label="Abrir perfil"><span class="material-symbols-outlined">account_circle</span></button>
+    </header>
+
+    <div class="controls-container">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Buscar" aria-label="Buscar ejercicio">
+            <span class="material-symbols-outlined search-icon">search</span>
+        </div>
+        <button id="toggle-all-btn" class="icon-btn" title="Plegar/Desplegar todo" aria-label="Plegar o desplegar todos los grupos">
+            <span class="material-symbols-outlined">unfold_more</span>
+        </button>
+    </div>
+
+    <main id="muscle-groups-container" aria-live="polite"></main>
+
+    <button id="add-group-fab" class="fab" aria-label="Añadir grupo muscular">
+        <span class="material-symbols-outlined">add</span>
+    </button>
+
+    <!-- Menú lateral derecho (Perfil) -->
+    <div id="profile-drawer" class="drawer drawer-right" aria-hidden="true">
+        <div class="drawer-content">
+            <span class="material-symbols-outlined profile-avatar">account_circle</span>
+            <h2 class="profile-name">Nombre</h2>
+        </div>
+    </div>
+
+    <!-- Menú lateral izquierdo (Menú principal) -->
+    <div id="menu-drawer" class="drawer drawer-left" aria-hidden="true">
+        <div class="drawer-content">
+            <!-- Contenido en blanco para el futuro -->
+        </div>
+    </div>
+
+    <!-- Fondo oscuro al abrir menús -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Modal genérico para crear grupo/ejercicio -->
+    <div id="input-modal" class="modal-overlay">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <h3 id="modal-title">Añadir</h3>
+            <input type="text" id="modal-input" placeholder="Nombre">
+            <div class="modal-actions">
+                <button id="modal-cancel" type="button">Cancelar</button>
+                <button id="modal-confirm" type="button" class="confirm">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
