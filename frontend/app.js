@@ -1,7 +1,16 @@
-// ---------- Configuración de la API ----------
-// Cuando pruebes desde el móvil, cambia esto por la IP de tu PC en la red local,
-// por ejemplo: 'http://192.168.1.35:8000'
-const API_BASE_URL = 'http://localhost:8000';
+// ---------- Datos locales (SQLite vía Capacitor) ----------
+import {
+    initDatabase,
+    obtenerGrupos,
+    crearGrupo,
+    eliminarGrupo,
+    obtenerEjercicios,
+    crearEjercicio,
+    eliminarEjercicio,
+    obtenerProgreso,
+    guardarRegistro,
+    eliminarRegistro
+} from './db.js';
 
 const incrementOptions = [2.5, 5, 10];
 
@@ -26,17 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setupGlobalEscape();
 });
 
-// ---------- Carga inicial desde la API ----------
+// ---------- Carga inicial desde la base de datos local ----------
 async function init() {
     showLoading(true);
     try {
-        const grupos = await apiGet('/grupos');
+        await initDatabase();
+        const grupos = await obtenerGrupos();
         const groups = [];
         for (const g of grupos) {
-            const ejercicios = await apiGet(`/ejercicios/${g.id_grupo}`);
+            const ejercicios = await obtenerEjercicios(g.id_grupo);
             const exercises = [];
             for (const ex of ejercicios) {
-                const logs = await apiGet(`/progreso/${ex.id_ejercicio}`);
+                const logs = await obtenerProgreso(ex.id_ejercicio);
                 exercises.push({
                     id_ejercicio: ex.id_ejercicio,
                     nombre: ex.nombre,
@@ -55,36 +65,11 @@ async function init() {
         clearError();
         renderList();
     } catch (e) {
-        showError('No se pudo conectar con el servidor. ¿Está main.py corriendo (uvicorn main:app --reload)?');
+        console.error(e);
+        showError('No se pudo abrir la base de datos local.');
     } finally {
         showLoading(false);
     }
-}
-
-// ---------- Helpers de red ----------
-async function apiGet(path) {
-    const res = await fetch(`${API_BASE_URL}${path}`);
-    if (!res.ok) throw new Error(`GET ${path} -> ${res.status}`);
-    return res.json();
-}
-
-async function apiPost(path, body) {
-    const res = await fetch(`${API_BASE_URL}${path}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-        const detail = await res.json().catch(() => ({}));
-        throw new Error(detail.detail || `POST ${path} -> ${res.status}`);
-    }
-    return res.json();
-}
-
-async function apiDelete(path) {
-    const res = await fetch(`${API_BASE_URL}${path}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error(`DELETE ${path} -> ${res.status}`);
-    return res.json();
 }
 
 function showLoading(isLoading) {
@@ -399,16 +384,17 @@ function wireExerciseDetail(item, group, ex) {
         const reps = parseInt(repsInput.value, 10);
         if (isNaN(reps) || reps <= 0) return;
         try {
-            await apiPost('/registro', {
+            await guardarRegistro({
                 id_ejercicio: ex.id_ejercicio,
                 peso: Number(ex.pesoActualKg.toFixed(2)),
                 repeticiones: reps
             });
-            ex.logs = await apiGet(`/progreso/${ex.id_ejercicio}`);
+            ex.logs = await obtenerProgreso(ex.id_ejercicio);
             clearError();
             refreshExerciseUI(item, group, ex);
         } catch (e) {
-            showError('No se pudo registrar la serie. Comprueba la conexión con el servidor.');
+            console.error(e);
+            showError('No se pudo registrar la serie.');
         }
     });
 
@@ -416,11 +402,12 @@ function wireExerciseDetail(item, group, ex) {
         btn.addEventListener('click', async () => {
             const logId = btn.closest('.set-chip').dataset.logId;
             try {
-                await apiDelete(`/registro/${logId}`);
-                ex.logs = await apiGet(`/progreso/${ex.id_ejercicio}`);
+                await eliminarRegistro(logId);
+                ex.logs = await obtenerProgreso(ex.id_ejercicio);
                 clearError();
                 refreshExerciseUI(item, group, ex);
             } catch (e) {
+                console.error(e);
                 showError('No se pudo eliminar la serie.');
             }
         });
@@ -481,12 +468,12 @@ function updateDisplay(inputElement, exerciseObj) {
     inputElement.value = getDisplayWeight(exerciseObj.pesoActualKg, exerciseObj.unit);
 }
 
-// ---------- CRUD de grupos y ejercicios (vía API) ----------
+// ---------- CRUD de grupos y ejercicios (SQLite local) ----------
 async function addGroup(name) {
     const trimmed = (name || '').trim();
     if (!trimmed) return;
     try {
-        const nuevo = await apiPost('/grupos', { nombre: trimmed });
+        const nuevo = await crearGrupo(trimmed);
         state.groups.push({ id_grupo: nuevo.id_grupo, nombre: nuevo.nombre, exercises: [] });
         openGroupIds.add(nuevo.id_grupo);
         clearError();
@@ -498,7 +485,7 @@ async function addGroup(name) {
 
 async function deleteGroup(groupId) {
     try {
-        await apiDelete(`/grupos/${groupId}`);
+        await eliminarGrupo(groupId);
         state.groups = state.groups.filter(g => g.id_grupo !== groupId);
         openGroupIds.delete(groupId);
         clearError();
@@ -512,7 +499,7 @@ async function addExercise(groupId, name) {
     const trimmed = (name || '').trim();
     if (!trimmed) return;
     try {
-        const nuevo = await apiPost('/ejercicios', { nombre: trimmed, id_grupo: groupId });
+        const nuevo = await crearEjercicio(trimmed, groupId);
         const group = state.groups.find(g => g.id_grupo === groupId);
         if (group) {
             group.exercises.push({
@@ -536,7 +523,7 @@ async function addExercise(groupId, name) {
 
 async function deleteExercise(groupId, exId) {
     try {
-        await apiDelete(`/ejercicios/${exId}`);
+        await eliminarEjercicio(exId);
         const group = state.groups.find(g => g.id_grupo === groupId);
         if (group) group.exercises = group.exercises.filter(e => e.id_ejercicio !== exId);
         expandedExerciseIds.delete(exId);
