@@ -1,9 +1,10 @@
 :root {
     --bg-main: #1A1A1A;
     --bg-surface: #222222;
-    --primary-red: #8a1818;
-    --dark-red: #5f1212;
-    --text-light: #c4c4c4;
+    --primary-red: #C62828;
+    --dark-red: #4A0000;
+    --text-red: #FF6B6B;
+    --text-light: #FFFFFF;
     --text-muted: #9A9A9A;
 }
 
@@ -25,7 +26,7 @@ body {
 
 button:focus-visible,
 input:focus-visible {
-    outline: 2px solid var(--primary-red);
+    outline: 2px solid var(--text-red);
     outline-offset: 2px;
 }
 
@@ -94,7 +95,7 @@ input:focus-visible {
     align-items: center;
     padding: 15px 20px;
     background-color: var(--bg-main);
-    color: var(--primary-red);
+    color: var(--text-red);
     font-size: 20px;
     font-weight: 700;
     cursor: pointer;
@@ -171,7 +172,7 @@ input:focus-visible {
 }
 
 .exercise-name-btn .chevron {
-    color: var(--primary-red);
+    color: var(--text-red);
     font-size: 20px;
     flex-shrink: 0;
     transition: transform 0.2s ease;
@@ -188,7 +189,7 @@ input:focus-visible {
 }
 
 .exercise-name {
-    color: var(--primary-red);
+    color: var(--text-red);
     font-size: 16px;
     font-weight: 600;
     white-space: nowrap;
@@ -292,7 +293,7 @@ input:focus-visible {
     width: 100%;
     background: none;
     border: none;
-    color: var(--primary-red);
+    color: var(--text-red);
     padding: 8px 15px 8px 20px;
     font-size: 13px;
     font-weight: 600;
@@ -339,8 +340,8 @@ input:focus-visible {
 }
 
 .log-btn {
-    background: var(--dark-red);
-    color: var(--text-light);
+    background: var(--primary-red);
+    color: #fff;
     border: none;
     border-radius: 20px;
     padding: 9px 16px;
@@ -409,7 +410,7 @@ input:focus-visible {
     bottom: 30px;
     right: 30px;
     background: var(--primary-red);
-    color: var(--text-light);
+    color: #fff;
     border: none;
     border-radius: 50%;
     width: 56px;
@@ -492,14 +493,14 @@ input:focus-visible {
 }
 
 .modal-box h3 {
-    color: var(--primary-red);
+    color: var(--text-red);
     font-size: 16px;
     margin-bottom: 14px;
 }
 
 .modal-box input {
     width: 100%;
-    background: var(--bg-main);
+    background: var(--dark-red);
     border: none;
     border-radius: 10px;
     padding: 10px 12px;
@@ -527,7 +528,7 @@ input:focus-visible {
 }
 
 .modal-actions .confirm {
-    color: var(--primary-red);
+    color: var(--text-red);
 }
 
 /* ---------- Banner de error de conexión ---------- */
@@ -579,4 +580,43 @@ input:focus-visible {
     position: relative;
     height: 160px;
     width: 100%;
+}
+
+/* ---------- Importador de notas (menú izquierdo) ---------- */
+.drawer-content-left {
+    align-items: stretch;
+    padding: 30px 20px;
+}
+
+.drawer-title {
+    color: var(--text-red);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.notas-textarea {
+    width: 100%;
+    min-height: 220px;
+    background: var(--dark-red);
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--text-light);
+    font-size: 13px;
+    font-family: 'Inter', monospace;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.importar-btn {
+    width: 100%;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.importar-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
 }

@@ -11,6 +11,7 @@ import {
     guardarRegistro,
     eliminarRegistro
 } from './db.js';
+import { procesarNotas } from './notasImporter.js';
 
 const incrementOptions = [2.5, 5, 10];
 
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupModal();
     setupAddGroup();
     setupGlobalEscape();
+    setupImporter();
 });
 
 // ---------- Carga inicial desde la base de datos local ----------
@@ -647,5 +649,35 @@ function setupDrawers() {
 function setupGlobalEscape() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && window._closeDrawers) window._closeDrawers();
+    });
+}
+
+// ---------- Importador de notas ----------
+function setupImporter() {
+    const btn = document.getElementById('importar-notas-btn');
+    const textarea = document.getElementById('notas-textarea');
+    const resultado = document.getElementById('importar-resultado');
+
+    btn.addEventListener('click', async () => {
+        const texto = textarea.value;
+        if (!texto.trim()) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Importando...';
+        resultado.textContent = '';
+
+        try {
+            const stats = await procesarNotas(texto);
+            resultado.textContent =
+                `Importado: ${stats.gruposCreados} grupo(s), ${stats.ejerciciosCreados} ejercicio(s), ${stats.seriesImportadas} serie(s) nueva(s).`;
+            textarea.value = '';
+            await init(); // recarga la lista para reflejar lo importado
+        } catch (e) {
+            console.error(e);
+            resultado.textContent = 'No se pudo importar. Revisa el formato del texto.';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Importar';
+        }
     });
 }

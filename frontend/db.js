@@ -97,6 +97,15 @@ export async function eliminarGrupo(grupoId) {
     await db.run('DELETE FROM GrupoMuscular WHERE id_grupo = ?;', [grupoId]);
 }
 
+// Usado por el importador de notas: reutiliza el grupo si ya existe (por
+// nombre) o lo crea si no. Equivalente al INSERT OR IGNORE de parser.py.
+export async function obtenerOCrearGrupo(nombre) {
+    const res = await db.run('INSERT OR IGNORE INTO GrupoMuscular (nombre) VALUES (?);', [nombre]);
+    const creado = (res.changes?.changes ?? 0) > 0;
+    const fila = await db.query('SELECT id_grupo, nombre FROM GrupoMuscular WHERE nombre = ?;', [nombre]);
+    return { ...fila.values[0], creado };
+}
+
 // ---------- Ejercicios ----------
 // Equivalente a GET /ejercicios/{grupo_id}
 export async function obtenerEjercicios(grupoId) {
@@ -124,6 +133,18 @@ export async function crearEjercicio(nombre, idGrupo) {
 // Equivalente a DELETE /ejercicios/{ejercicio_id}
 export async function eliminarEjercicio(ejercicioId) {
     await db.run('DELETE FROM Ejercicio WHERE id_ejercicio = ?;', [ejercicioId]);
+}
+
+// Usado por el importador de notas: reutiliza el ejercicio si ya existe
+// (por nombre) o lo crea si no.
+export async function obtenerOCrearEjercicio(nombre, idGrupo) {
+    const res = await db.run(
+        'INSERT OR IGNORE INTO Ejercicio (nombre, id_grupo) VALUES (?, ?);',
+        [nombre, idGrupo]
+    );
+    const creado = (res.changes?.changes ?? 0) > 0;
+    const fila = await db.query('SELECT id_ejercicio, nombre, id_grupo FROM Ejercicio WHERE nombre = ?;', [nombre]);
+    return { ...fila.values[0], creado };
 }
 
 // ---------- Series registradas (peso + reps) ----------
