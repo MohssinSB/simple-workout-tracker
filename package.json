@@ -1,0 +1,33 @@
+{
+  "name": "simple-workout-tracker",
+  "version": "1.0.0",
+  "description": "A lightweight, local-first web application designed to log gym workouts, track weight progression, and categorize exercises by muscle groups.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohssinSB/simple-workout-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MohssinSB/simple-workout-tracker/issues"
+  },
+  "homepage": "https://github.com/MohssinSB/simple-workout-tracker#readme",
+  "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.1",
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@fontsource/inter": "^5.3.0",
+    "chart.js": "^4.5.1",
+    "material-symbols": "^0.47.4"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  }
+}

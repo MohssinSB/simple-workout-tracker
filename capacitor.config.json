@@ -1,0 +1,6 @@
+{
+  "appId": "com.mohssin.workouttracker",
+  "appName": "Workout Tracker",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
